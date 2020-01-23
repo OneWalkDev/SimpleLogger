@@ -2,7 +2,7 @@
 
 namespace yurisi\Database;
 
-use yurisi\main;
+use yurisi\SimpleLogger;
 
 use pocketmine\Player;
 use pocketmine\Server;
@@ -11,7 +11,7 @@ use pocketmine\item\Item;
 class SQliteLogger{
 
 
-    public function __construct(main $main) {
+    public function __construct(SimpleLogger $main) {
         $this->main = $main;
     }
 

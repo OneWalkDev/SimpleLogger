@@ -7,12 +7,12 @@ use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
-use yurisi\main;
+use yurisi\SimpleLogger;
 use yurisi\Database\SQliteLogger;
 
 class MainCommand extends Command {
 
-    public function __construct(main $main) {
+    public function __construct(SimpleLogger $main) {
         $this->main = $main;
         parent::__construct("log", "ログの確認のオンオフ", "/log x y z world");
     }

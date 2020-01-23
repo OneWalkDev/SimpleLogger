@@ -10,11 +10,11 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 
 use yurisi\Database\SQliteLogger;
-use yurisi\main;
+use yurisi\SimpleLogger;
 
 class PlayerEvent implements Listener{
 
-    public function __construct(main $main) {
+    public function __construct(SimpleLogger $main) {
         $this->main = $main;
     }
 

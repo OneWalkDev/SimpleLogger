@@ -12,7 +12,7 @@ use pocketmine\utils\Config;
 use yurisi\Command\MainCommand;
 use yurisi\Event\PlayerEvent;
 
-class main extends PluginBase implements Listener {
+class SimpleLogger extends PluginBase implements Listener {
 
     public $playerlog;
 
