@@ -21,6 +21,7 @@ class DataBase extends SQLite3 {
         $sql = "CREATE TABLE IF NOT EXISTS logdata (xyz TEXT PRIMARY KEY, who TEXT , action TEXT, time TEXT, id INT,meta INT)";
         $this->query($sql);
         $this->main = $main;
+        self::$instance = $this;
     }
 
     public function registerLog(int $x, int $y, int $z, string $level, int $id, int $meta,Player $player,String $eventType){

@@ -18,8 +18,8 @@ class SimpleLogger extends PluginBase{
     private $log;
 
     public function onEnable(){
-        $this->getServer()->getPluginManager()->registerEvents(new PlayerEvent(), $this);
-        $this->getServer()->getCommandMap()->register($this->getName(), new LogCommand());
+        $this->getServer()->getPluginManager()->registerEvents(new PlayerEvent($this), $this);
+        $this->getServer()->getCommandMap()->register($this->getName(), new LogCommand($this));
         $this->log = new DataBase($this);
     }
 

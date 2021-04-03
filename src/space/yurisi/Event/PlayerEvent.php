@@ -46,7 +46,6 @@ class PlayerEvent implements Listener {
             $z = $floorVec->z;
             $world = $block->getLevel()->getFolderName();
             $cls = DataBase::getInstance();
-
             if ($this->main->isOn($player)) {
                 $cls->checklog($x, $y, $z, $world, $player);
                 $event->setCancelled();
