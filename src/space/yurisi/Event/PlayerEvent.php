@@ -13,41 +13,46 @@ use space\yurisi\SimpleLogger;
 
 class PlayerEvent implements Listener {
 
+    /** @var SimpleLogger */
+    private $main;
+
+    public function __construct(SimpleLogger $main) {
+        $this->main = $main;
+    }
+
     /**
      * @priority MONITOR
      * @param BlockBreakEvent $event
-     * @return bool
      */
     public function onBreak(BlockBreakEvent $event) {
         $this->checkLog($event, "b");
-        return true;
     }
 
     /**
      * @priority MONITOR
      * @param BlockPlaceEvent $event
-     * @return bool
      */
     public function onPlace(BlockPlaceEvent $event) {
         $this->checkLog($event, "p");
-        return true;
     }
 
     private function checkLog(BlockEvent $event, string $eventType) {
         $player = $event->getPlayer();
         if ($player instanceof Player) {
-            $x = $event->getBlock()->getFloorX();
-            $y = $event->getBlock()->getFloorY();
-            $z = $event->getBlock()->getFloorZ();
-            $world = $event->getBlock()->getLevel()->getFolderName();
-            $cls = new DataBase();
+            $block = $event->getBlock();
+            $floorVec = $block->floor();
+            $x = $floorVec->x;
+            $y = $floorVec->y;
+            $z = $floorVec->z;
+            $world = $block->getLevel()->getFolderName();
+            $cls = DataBase::getInstance();
 
-            if (SimpleLogger::getInstance()->isOn($player)) {
+            if ($this->main->isOn($player)) {
                 $cls->checklog($x, $y, $z, $world, $player);
                 $event->setCancelled();
             } else {
-                $id = $event->getBlock()->getId();
-                $meta = $event->getBlock()->getDamage();
+                $id = $block->getId();
+                $meta = $block->getDamage();
                 $cls->registerlog($x, $y, $z, $world, $id, $meta, $player, $eventType);
             }
         }

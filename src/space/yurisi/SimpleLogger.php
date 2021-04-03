@@ -10,40 +10,32 @@ use space\yurisi\Command\LogCommand;
 use space\yurisi\DB\DataBase;
 use space\yurisi\Event\PlayerEvent;
 
+use SQLite3;
+
 class SimpleLogger extends PluginBase{
 
-   /**
-    * @var self
-    */
-    private static $main;
-
-    /**
-     * @var \SQLite3
-     */
+    /** @var SQLite3 */
     private $log;
 
     public function onEnable(){
-	Server::getInstance()->getPluginManager()->registerEvents(new PlayerEvent(),$this);
-	Server::getInstance()->getCommandMap()->register("log", new LogCommand());
-	self::$main=$this;
-	$this->log=new DataBase();
+        $this->getServer()->getPluginManager()->registerEvents(new PlayerEvent(), $this);
+        $this->getServer()->getCommandMap()->register($this->getName(), new LogCommand());
+        $this->log = new DataBase($this);
     }
 
-    public static function getInstance():self {
-	return self::$main;
+    public function getDB(): DataBase{
+        return $this->log;
     }
 
-    public function getDB():\SQLite3{
-	return $this->log;
+    public function isOn(Player $player): bool{
+        $tag = $player->namedtag;
+        if ($tag->offsetExists($this->getName()) && ($tag->getInt($this->getName()) !== 0)) {
+            return true;
+        }
+        return false;
     }
 
-    public function isOn(Player $player):bool{
-	$tag = $player->namedtag;
-	if ($tag->offsetExists($this->getName())) if ($tag->getInt($this->getName()) !== 0) return true;
-	return false;
+    public function onDisable() {
+        $this->log->close();
     }
-
-   public function onDisable() {
-      $this->getDB()->close();
-   }
 }
