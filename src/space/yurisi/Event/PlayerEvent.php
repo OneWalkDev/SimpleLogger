@@ -1,9 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace space\yurisi\Event;
 
-use pocketmine\event\block\BlockEvent;
-use pocketmine\Player;
 use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -14,7 +13,7 @@ use space\yurisi\SimpleLogger;
 class PlayerEvent implements Listener {
 
     /** @var SimpleLogger */
-    private $main;
+    private SimpleLogger $main;
 
     public function __construct(SimpleLogger $main) {
         $this->main = $main;
@@ -36,24 +35,21 @@ class PlayerEvent implements Listener {
         $this->checkLog($event, "p");
     }
 
-    private function checkLog(BlockEvent $event, string $eventType) {
+    private function checkLog(BlockBreakEvent|BlockPlaceEvent $event, string $eventType) {
         $player = $event->getPlayer();
-        if ($player instanceof Player) {
-            $block = $event->getBlock();
-            $floorVec = $block->floor();
-            $x = $floorVec->x;
-            $y = $floorVec->y;
-            $z = $floorVec->z;
-            $world = $block->getLevel()->getFolderName();
-            $cls = DataBase::getInstance();
-            if ($this->main->isOn($player)) {
-                $cls->checklog($x, $y, $z, $world, $player);
-                $event->setCancelled();
-            } else {
-                $id = $block->getId();
-                $meta = $block->getDamage();
-                $cls->registerlog($x, $y, $z, $world, $id, $meta, $player, $eventType);
-            }
+        $block = $event->getBlock();
+        $x = $block->getPosition()->getFloorX();
+        $y = $block->getPosition()->getFloorY();
+        $z = $block->getPosition()->getFloorZ();
+        $world = $block->getPosition()->getWorld()->getFolderName();
+        $cls = $this->main->getDB();
+        if ($this->main->isOn($player)) {
+            $cls->checklog($x, $y, $z, $world, $player);
+            $event->cancel();
+        } else {
+            $id = $block->getId();
+            $meta = $block->getMeta();
+            $cls->registerlog($x, $y, $z, $world, $id, $meta, $player, $eventType);
         }
         return true;
     }

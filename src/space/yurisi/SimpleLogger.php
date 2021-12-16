@@ -1,41 +1,58 @@
 <?php
+declare(strict_types=1);
 
 namespace space\yurisi;
 
-use pocketmine\Player;
-use pocketmine\Server;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 
+use pocketmine\utils\Config;
 use space\yurisi\Command\LogCommand;
 use space\yurisi\DB\DataBase;
 use space\yurisi\Event\PlayerEvent;
 
-use SQLite3;
+class SimpleLogger extends PluginBase {
 
-class SimpleLogger extends PluginBase{
+    /** @var DataBase */
+    private DataBase $log;
 
-    /** @var SQLite3 */
-    private $log;
+    private Config $config;
 
-    public function onEnable(){
+    private array $data;
+
+    public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents(new PlayerEvent($this), $this);
         $this->getServer()->getCommandMap()->register($this->getName(), new LogCommand($this));
-        $this->log = new DataBase($this);
+        $this->log = new DataBase($this->getDataFolder());
+        $this->config = new Config($this->getDataFolder() . "player.yml", Config::YAML);
+        $this->data = $this->config->getAll();
     }
 
-    public function getDB(): DataBase{
+    public function getDB(): DataBase {
         return $this->log;
     }
 
-    public function isOn(Player $player): bool{
-        $tag = $player->namedtag;
-        if ($tag->offsetExists($this->getName()) && ($tag->getInt($this->getName()) !== 0)) {
-            return true;
+    public function changeParam(Player $player) {
+        if (!isset($this->data[$player->getName()]) or !$this->data[$player->getName()]) {
+            $this->data[$player->getName()] = true;
+            return;
+        }
+        $this->data[$player->getName()] = false;
+    }
+
+    public function isOn(Player $player): bool {
+        if (isset($this->data[$player->getName()])) {
+            return $this->data[$player->getName()];
         }
         return false;
     }
 
-    public function onDisable() {
+    public function onDisable(): void {
+        $this->config->setAll($this->data);
+        try {
+            $this->config->save();
+        } catch (\JsonException $e) {
+        }
         $this->log->close();
     }
 }
