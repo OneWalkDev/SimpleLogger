@@ -7,7 +7,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 
-use space\yurisi\DB\DataBase;
 use space\yurisi\SimpleLogger;
 
 class PlayerEvent implements Listener {

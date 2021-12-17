@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace space\yurisi\Command;
 
-use pocketmine\permission\DefaultPermissions;
 use pocketmine\player\Player;
 
 use pocketmine\command\CommandSender;

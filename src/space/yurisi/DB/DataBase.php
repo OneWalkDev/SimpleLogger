@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace space\yurisi\DB;
 
 use pocketmine\item\ItemFactory;
-use space\yurisi\SimpleLogger;
 
 use pocketmine\player\Player;
 use SQLite3;
