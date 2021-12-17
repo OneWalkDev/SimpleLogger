@@ -12,10 +12,7 @@ use space\yurisi\SimpleLogger;
 
 class LogCommand extends Command {
 
-    private SimpleLogger $main;
-
-    public function __construct(SimpleLogger $main) {
-        $this->main = $main;
+    public function __construct(private SimpleLogger $main) {
         parent::__construct("log", "ログの確認", "/log [x] [y] [z] [world]");
         $this->setPermission("space.yurisi.log");
     }

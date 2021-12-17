@@ -11,11 +11,7 @@ use space\yurisi\SimpleLogger;
 
 class PlayerEvent implements Listener {
 
-    /** @var SimpleLogger */
-    private SimpleLogger $main;
-
-    public function __construct(SimpleLogger $main) {
-        $this->main = $main;
+    public function __construct(private SimpleLogger $main) {
     }
 
     /**

@@ -13,7 +13,6 @@ use space\yurisi\Event\PlayerEvent;
 
 class SimpleLogger extends PluginBase {
 
-    /** @var DataBase */
     private DataBase $log;
 
     private Config $config;
