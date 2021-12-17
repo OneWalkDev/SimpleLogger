@@ -23,7 +23,7 @@ class LogCommand extends Command {
 
     public function execute(CommandSender $sender, string $label, array $args): bool {
         if (!$sender instanceof Player) return false;
-        if (!$sender->hasPermission(DefaultPermissions::ROOT_OPERATOR)) return false;
+        if (!$this->testPermission($sender)) return false;
         if (!isset($args[0])) {
             $msg = ["ON", "OFF"];
             $this->main->changeParam($sender);
